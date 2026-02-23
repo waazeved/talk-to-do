@@ -1,9 +1,13 @@
 package com.waltsoft.talk_to_do;
 
 
-import com.waltsoft.talk_to_do.command.StartChatCommand;
+import com.waltsoft.talk_to_do.command.ChatCommand;
+import com.waltsoft.talk_to_do.dot_env.DotEnv;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,28 +18,36 @@ import picocli.CommandLine;
 @SpringBootApplication
 @ComponentScan(basePackages = "com.waltsoft.talk_to_do")
 @EntityScan(basePackages = "com.waltsoft.talk_to_do")
-@CommandLine.Command(name = "run", mixinStandardHelpOptions = true, version = "1.0", description = "Run commands")
 public class BootApplication implements CommandLineRunner {
 
-	private static final Log LOGGER = LogFactory.getLog(BootApplication.class);
+    private static final Log LOGGER = LogFactory.getLog(BootApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication application = new SpringApplication(BootApplication.class);
-		application.run(args);
-	}
+    private final ChatClient.Builder chatClientBuilder;
+    private final ChatMemory chatMemory;
+    private final DotEnv dotEnv;
 
-	@Override
-	public void run(String... args) {
-		try {
-			CommandLine commandLine = new CommandLine(new BootApplication());
-			commandLine.addSubcommand(new StartChatCommand());
-			commandLine.execute(args);
-		} catch (Exception exception) {
-			LOGGER.error(exception);
-			System.exit(1);
-		}
-	}
+    @Autowired
+    public BootApplication(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory, DotEnv dotEnv) {
+        this.chatClientBuilder = chatClientBuilder;
+        this.chatMemory = chatMemory;
+        this.dotEnv = dotEnv;
+    }
 
+
+    public static void main(String[] args) {
+        SpringApplication application = new SpringApplication(BootApplication.class);
+        application.run(args);
+    }
+
+    @Override
+    public void run(String... args) {
+        try {
+            CommandLine commandLine = new CommandLine(new ChatCommand(chatClientBuilder, chatMemory, dotEnv));
+            commandLine.execute(args);
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+    }
 }
 
 

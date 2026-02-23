@@ -12,8 +12,7 @@ plugins {
 
 group = 'com.waltsoft'
 version = '0.0.1'
-description = 'Spring AI Task Manager: A natural language interface for daily To-Do management, using AI Function Calling to trigger local CRUD operations.'
-
+description = 'A Spring AI-powered Agent that manages daily tasks through natural language. It leverages Function Calling to autonomously orchestrate local CRUD operations based on user intent.'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -24,10 +23,19 @@ jar {
     enabled = false
 }
 
+bootRun {
+    standardInput = System.in
+}
+
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/release' }
     maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:1.1.2"
+    }
 }
 
 dependencies {
@@ -35,6 +43,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.shell:spring-shell-starter:3.4.0'
+    implementation 'org.springframework.ai:spring-ai-starter-model-google-genai'
 
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.postgresql:postgresql'
@@ -48,6 +58,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
 
 test {
     useJUnitPlatform()
