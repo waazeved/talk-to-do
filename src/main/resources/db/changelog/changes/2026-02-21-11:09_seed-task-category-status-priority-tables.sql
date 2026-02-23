@@ -12,7 +12,7 @@ INSERT INTO task_priority (code)
 VALUES ('URGENT'),
        ('HIGH'),
        ('MEDIUM'),
-       ('LOW')
+       ('LOW');
 
 INSERT INTO task_category (code)
 VALUES ('WORK'),

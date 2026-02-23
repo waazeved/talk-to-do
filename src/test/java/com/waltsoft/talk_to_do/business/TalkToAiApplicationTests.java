@@ -1,4 +1,4 @@
-package com.waltsoft.talk_to_do;
+package com.waltsoft.talk_to_do.business;
 
 import com.waltsoft.talk_to_do.container_test.PostgreSQLContainerTest;
 import org.junit.jupiter.api.Test;
