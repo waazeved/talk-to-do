@@ -18,4 +18,16 @@ public class DotEnv {
     public String getGeminiApiKey() {
         return dotenv.get("GEMINI_API_KEY", "");
     }
+
+    public String getDatabaseUrl() {
+        return dotenv.get("DATABASE_URL");
+    }
+
+    public String getDatabaseUser() {
+        return dotenv.get("DATABASE_USER");
+    }
+
+    public String getDatabasePassword() {
+        return dotenv.get("DATABASE_PASSWORD");
+    }
 }

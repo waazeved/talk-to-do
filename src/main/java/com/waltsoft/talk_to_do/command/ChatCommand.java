@@ -16,9 +16,9 @@ import java.util.Scanner;
         mixinStandardHelpOptions = true)
 public class ChatCommand implements Runnable {
 
+    public static final String EXIT_COMMAND = "exit";
     static final String COMMAND = "start";
     private static final Log LOGGER = LogFactory.getLog(ChatCommand.class.getName());
-
     private final ChatClient chatClient;
     private final String username;
 
@@ -40,16 +40,16 @@ public class ChatCommand implements Runnable {
     @Override
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("\n========================================");
-        System.out.println("   AI AGENT PRONTO - Digite sua mensagem");
-        System.out.println("========================================\n");
+        LOGGER.info("\n========================================");
+        LOGGER.info("   AI AGENT PRONTO - Digite sua mensagem");
+        LOGGER.info("========================================\n");
 
         while (true) {
-            System.out.print("VOCÊ > ");
+            System.out.println("YOU > ");
             String input = scanner.nextLine();
 
-            if (input.equalsIgnoreCase("sair")) {
-                System.out.println("AI > Até mais!");
+            if (input.equalsIgnoreCase(EXIT_COMMAND)) {
+                System.out.println("AI > Bye!");
                 break;
             }
 
@@ -63,7 +63,7 @@ public class ChatCommand implements Runnable {
 
                 System.out.println("AI > " + response + "\n");
             } catch (Exception e) {
-                System.out.println("AI > Erro: " + e.getMessage());
+                LOGGER.error("Error: ", e);
             }
         }
     }
