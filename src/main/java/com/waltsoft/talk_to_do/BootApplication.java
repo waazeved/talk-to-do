@@ -3,6 +3,7 @@ package com.waltsoft.talk_to_do;
 
 import com.waltsoft.talk_to_do.command.ChatCommand;
 import com.waltsoft.talk_to_do.dot_env.DotEnv;
+import com.waltsoft.talk_to_do.system_property.SystemPropertySetter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
@@ -36,6 +37,7 @@ public class BootApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(BootApplication.class);
+        new SystemPropertySetter().set();
         application.run(args);
     }
 
