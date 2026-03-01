@@ -10,7 +10,7 @@ public record TaskInsertDto(
         TaskStatusCodeEnum taskStatusCode,
 
         @JsonPropertyDescription("The category id. Required.")
-        long taskCategoryCode,
+        long taskCategoryId,
 
         @JsonPropertyDescription("The priority code. Required.")
         TaskPriorityCodeEnum taskPriorityCode,

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class AIAgentConfig {
 
-    private static final int MAX_MESSAGES_CHAT_MEMORY = 10;
+    private static final int MAX_MESSAGES_CHAT_MEMORY = 50;
 
     private final DotEnv dotEnv;
 
