@@ -14,14 +14,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class AiAgentConfig {
+public class AIAgentConfig {
 
     private static final int MAX_MESSAGES_CHAT_MEMORY = 10;
 
     private final DotEnv dotEnv;
 
+
     @Autowired
-    public AiAgentConfig(DotEnv dotEnv) {
+    public AIAgentConfig(DotEnv dotEnv) {
         this.dotEnv = dotEnv;
     }
 
@@ -55,7 +56,6 @@ public class AiAgentConfig {
                 .model("gemini-2.5-flash")
                 .temperature(0.3)
                 .build();
-
 
         return GoogleGenAiChatModel
                 .builder()

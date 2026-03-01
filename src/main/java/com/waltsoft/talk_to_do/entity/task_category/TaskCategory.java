@@ -32,6 +32,11 @@ public class TaskCategory extends BasicEntity {
         return code;
     }
 
+    public TaskCategory setCode(String code) {
+        this.code = code;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof TaskCategory that)) return false;

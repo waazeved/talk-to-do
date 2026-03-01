@@ -1,13 +1,11 @@
 package com.waltsoft.talk_to_do;
 
 
+import com.waltsoft.talk_to_do.business.ai_agent.AIAgentService;
 import com.waltsoft.talk_to_do.command.ChatCommand;
-import com.waltsoft.talk_to_do.dot_env.DotEnv;
 import com.waltsoft.talk_to_do.system_property.SystemPropertySetter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,15 +21,11 @@ public class BootApplication implements CommandLineRunner {
 
     private static final Log LOGGER = LogFactory.getLog(BootApplication.class);
 
-    private final ChatClient.Builder chatClientBuilder;
-    private final ChatMemory chatMemory;
-    private final DotEnv dotEnv;
+    private final AIAgentService aiAgentService;
 
     @Autowired
-    public BootApplication(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory, DotEnv dotEnv) {
-        this.chatClientBuilder = chatClientBuilder;
-        this.chatMemory = chatMemory;
-        this.dotEnv = dotEnv;
+    public BootApplication(AIAgentService aiAgentService) {
+        this.aiAgentService = aiAgentService;
     }
 
 
@@ -44,7 +38,7 @@ public class BootApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            CommandLine commandLine = new CommandLine(new ChatCommand(chatClientBuilder, chatMemory, dotEnv));
+            CommandLine commandLine = new CommandLine(new ChatCommand(aiAgentService));
             commandLine.execute(args);
         } catch (Exception e) {
             LOGGER.error(e);
