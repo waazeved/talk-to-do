@@ -1,15 +1,16 @@
 package com.waltsoft.talk_to_do.command;
 
 
-import com.waltsoft.talk_to_do.dot_env.DotEnv;
+import com.waltsoft.talk_to_do.business.ai_agent.AIAgentService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import picocli.CommandLine;
 
-import java.util.Scanner;
+import java.io.IOException;
 
 @CommandLine.Command(name = ChatCommand.COMMAND,
         description = "Start chat with A.I. agent.",
@@ -19,52 +20,87 @@ public class ChatCommand implements Runnable {
     public static final String EXIT_COMMAND = "exit";
     static final String COMMAND = "start";
     private static final Log LOGGER = LogFactory.getLog(ChatCommand.class.getName());
-    private final ChatClient chatClient;
-    private final String username;
+    private final AIAgentService aiAgentService;
 
-    public ChatCommand(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory, DotEnv dotEnv) {
-        this.chatClient = makeChatClient(chatClientBuilder, chatMemory);
-        this.username = dotEnv.getUsername(); //In the future, the user will authenticate to enter in the system and username will come from database
-    }
-
-
-    private ChatClient makeChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
-        return chatClientBuilder
-                .defaultAdvisors(
-                        MessageChatMemoryAdvisor
-                                .builder(chatMemory)
-                                .build())
-                .build();
+    public ChatCommand(AIAgentService aiAgentService) {
+        this.aiAgentService = aiAgentService;
     }
 
     @Override
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-        LOGGER.info("\n========================================");
-        LOGGER.info("   AI AGENT PRONTO - Digite sua mensagem");
-        LOGGER.info("========================================\n");
+        try (Terminal terminal = TerminalBuilder
+                .builder()
+                .system(true)
+                .streams(System.in, System.out) // Força o JLine a usar as streams padrão
+                .nativeSignals(true)            // Permite capturar sinais do SO
+                .signalHandler(Terminal.SignalHandler.SIG_IGN) // Evita que o Gradle mate a thread ao ler
+                .build()) {
 
-        while (true) {
-            System.out.println("YOU > ");
-            String input = scanner.nextLine();
+            terminal
+                    .writer()
+                    .println("========================================");
+            terminal
+                    .writer()
+                    .println("               TALK TO DO               ");
+            terminal
+                    .writer()
+                    .println("========================================");
 
-            if (input.equalsIgnoreCase(EXIT_COMMAND)) {
-                System.out.println("AI > Bye!");
-                break;
+            LineReader reader = LineReaderBuilder
+                    .builder()
+                    .terminal(terminal)
+                    .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+                    .option(LineReader.Option.BRACKETED_PASTE, true)
+                    .build();
+
+            while (true) {
+                String userInput = reader.readLine("YOU: ");
+
+                if (EXIT_COMMAND.equalsIgnoreCase(userInput)) {
+                    break;
+                }
+
+                String response = this.aiAgentService.chat(userInput);
+
+                printAIResponse(terminal, response);
+
+                terminal.flush();
             }
 
-            try {
-                String response = chatClient
-                        .prompt()
-                        .user(input)
-                        .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, this.username))
-                        .call()
-                        .content();
+            terminal
+                    .writer()
+                    .println("Goodbye!");
 
-                System.out.println("AI > " + response + "\n");
-            } catch (Exception e) {
-                LOGGER.error("Error: ", e);
-            }
+        } catch (IOException e) {
+            System.err.println("Error creating terminal: " + e.getMessage());
         }
+
+    }
+
+    private void printAIResponse(Terminal terminal, String response) {
+        int maxWidth = terminal.getWidth() > 0 ? terminal.getWidth() - 5:80;
+
+        // Divide o texto em palavras e reconstrói com quebras de linha
+        StringBuilder sb = new StringBuilder();
+        String[] words = response.split(" ");
+        int currentLineLength = 0;
+
+        for (String word : words) {
+            if (currentLineLength + word.length() + 1 > maxWidth) {
+                sb.append("\n    "); // Indentação para a IA parecer um bloco
+                currentLineLength = 4;
+            }
+            sb
+                    .append(word)
+                    .append(" ");
+            currentLineLength += word.length() + 1;
+        }
+
+        terminal
+                .writer()
+                .println("AI: " + sb
+                        .toString()
+                        .trim());
+        terminal.flush();
     }
 }
