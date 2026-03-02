@@ -11,12 +11,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import picocli.CommandLine;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.waltsoft.talk_to_do")
 @EntityScan(basePackages = "com.waltsoft.talk_to_do")
+@EnableCaching
 public class BootApplication implements CommandLineRunner {
 
     private static final Log LOGGER = LogFactory.getLog(BootApplication.class);
