@@ -2,14 +2,13 @@ package com.waltsoft.talk_to_do.business.ai_agent;
 
 import com.waltsoft.talk_to_do.business.task.TaskService;
 import com.waltsoft.talk_to_do.business.task_category.TaskCategoryService;
-import com.waltsoft.talk_to_do.business.task_priority.TaskPriorityService;
-import com.waltsoft.talk_to_do.business.task_status.TaskStatusService;
 import com.waltsoft.talk_to_do.dot_env.DotEnv;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -32,15 +31,11 @@ public class AIAgentService {
                           ChatMemory chatMemory,
                           DotEnv dotEnv,
                           TaskService taskService,
-                          TaskStatusService taskStatusService,
-                          TaskCategoryService taskCategoryService,
-                          TaskPriorityService taskPriorityService) {
+                          TaskCategoryService taskCategoryService) {
         this.chatClient = makeChatClient(chatClientBuilder, chatMemory);
         this.username = dotEnv.getUsername(); //In the future, the user will authenticate to enter in the system and username will come from database
         this.taskService = taskService;
-        this.taskStatusService = taskStatusService;
         this.taskCategoryService = taskCategoryService;
-        this.taskPriorityService = taskPriorityService;
     }
 
 
@@ -53,6 +48,7 @@ public class AIAgentService {
                 .build();
     }
 
+    @Cacheable(value = "aiChatCache", key = "#userInput")
     public String chat(String userInput) {
 
         return chatClient
