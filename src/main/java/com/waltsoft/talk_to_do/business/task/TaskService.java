@@ -108,7 +108,7 @@ public class TaskService implements BasicService<Task, Long> {
                 .getCache("aiChatCache")
                 .clear();
 
-        return "New task created with success.";
+        return "Task updated with success.";
 
     }
 
