@@ -2,6 +2,8 @@ package com.waltsoft.talk_to_do.business.ai_agent;
 
 import com.google.genai.Client;
 import com.waltsoft.talk_to_do.dot_env.DotEnv;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
@@ -9,10 +11,12 @@ import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel;
 import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
 
 @Configuration
 @Profile("!test")
@@ -21,7 +25,6 @@ public class AIAgentConfig {
     private static final int MAX_MESSAGES_CHAT_MEMORY = 50;
 
     private final DotEnv dotEnv;
-
 
     @Autowired
     public AIAgentConfig(DotEnv dotEnv) {
@@ -36,6 +39,21 @@ public class AIAgentConfig {
                 .builder()
                 .chatMemoryRepository(repository)
                 .maxMessages(MAX_MESSAGES_CHAT_MEMORY)
+                .build();
+    }
+
+    @Bean
+    public Resource promptSystemContext(@Value("classpath:/prompts/system-context.md") Resource resource) {
+        return resource;
+    }
+
+    @Bean
+    public ChatClient chatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
+        return chatClientBuilder
+                .defaultAdvisors(
+                        MessageChatMemoryAdvisor
+                                .builder(chatMemory)
+                                .build())
                 .build();
     }
 
