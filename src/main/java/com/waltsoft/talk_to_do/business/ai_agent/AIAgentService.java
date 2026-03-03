@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Service
 public class AIAgentService {
@@ -32,14 +33,24 @@ public class AIAgentService {
                           DotEnv dotEnv,
                           TaskService taskService,
                           TaskCategoryService taskCategoryService) {
-        this.chatClient = makeChatClient(chatClientBuilder, chatMemory);
-        this.username = dotEnv.getUsername(); //In the future, the user will authenticate to enter in the system and username will come from database
+        this(makeChatClient(chatClientBuilder, chatMemory),
+                dotEnv.getUsername(),
+                taskService,
+                taskCategoryService);
+    }
+
+    AIAgentService(ChatClient chatClient,
+                   String username,
+                   TaskService taskService,
+                   TaskCategoryService taskCategoryService) {
+        this.chatClient = chatClient;
+        this.username = username;
         this.taskService = taskService;
         this.taskCategoryService = taskCategoryService;
     }
 
 
-    private ChatClient makeChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
+    private static ChatClient makeChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
         return chatClientBuilder
                 .defaultAdvisors(
                         MessageChatMemoryAdvisor
@@ -54,15 +65,23 @@ public class AIAgentService {
         return chatClient
                 .prompt()
                 .user(userInput)
-                .system(s -> s
-                        .text(promptSystemContext)
-                        .params(Map.of(CURRENT_DATE_TIME_PROMPT_PARAM, LocalDateTime
-                                .now()
-                                .toString())))
+                .system(makeSystem(promptSystemContext))
                 .tools(this.taskService, this.taskCategoryService)
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, this.username))
+                .advisors(makeAdvisors(username))
                 .call()
                 .content();
+    }
+
+    Consumer<ChatClient.AdvisorSpec> makeAdvisors(String username) {
+        return a -> a.param(ChatMemory.CONVERSATION_ID, username);
+    }
+
+    Consumer<ChatClient.PromptSystemSpec> makeSystem(Resource promptSystemContext) {
+        return s -> s
+                .text(promptSystemContext)
+                .params(Map.of(CURRENT_DATE_TIME_PROMPT_PARAM, LocalDateTime
+                        .now()
+                        .toString()));
     }
 
 
