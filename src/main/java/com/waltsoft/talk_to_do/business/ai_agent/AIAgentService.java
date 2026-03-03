@@ -4,10 +4,8 @@ import com.waltsoft.talk_to_do.business.task.TaskService;
 import com.waltsoft.talk_to_do.business.task_category.TaskCategoryService;
 import com.waltsoft.talk_to_do.dot_env.DotEnv;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -23,40 +21,20 @@ public class AIAgentService {
     private final TaskService taskService;
     private final TaskCategoryService taskCategoryService;
     private final ChatClient chatClient;
-    private final String username;
-    @Value("classpath:/prompts/system-context.md")
-    private Resource promptSystemContext;
+    private final DotEnv dotEnv;
+    private final Resource promptSystemContext;
 
     @Autowired
-    public AIAgentService(ChatClient.Builder chatClientBuilder,
-                          ChatMemory chatMemory,
+    public AIAgentService(ChatClient chatClient,
                           DotEnv dotEnv,
                           TaskService taskService,
-                          TaskCategoryService taskCategoryService) {
-        this(makeChatClient(chatClientBuilder, chatMemory),
-                dotEnv.getUsername(),
-                taskService,
-                taskCategoryService);
-    }
-
-    AIAgentService(ChatClient chatClient,
-                   String username,
-                   TaskService taskService,
-                   TaskCategoryService taskCategoryService) {
+                          TaskCategoryService taskCategoryService,
+                          Resource promptSystemContext) {
         this.chatClient = chatClient;
-        this.username = username;
+        this.dotEnv = dotEnv;
         this.taskService = taskService;
         this.taskCategoryService = taskCategoryService;
-    }
-
-
-    private static ChatClient makeChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
-        return chatClientBuilder
-                .defaultAdvisors(
-                        MessageChatMemoryAdvisor
-                                .builder(chatMemory)
-                                .build())
-                .build();
+        this.promptSystemContext = promptSystemContext;
     }
 
     @Cacheable(value = "aiChatCache", key = "#userInput")
@@ -67,7 +45,7 @@ public class AIAgentService {
                 .user(userInput)
                 .system(makeSystem(promptSystemContext))
                 .tools(this.taskService, this.taskCategoryService)
-                .advisors(makeAdvisors(username))
+                .advisors(makeAdvisors(dotEnv.getUsername()))
                 .call()
                 .content();
     }

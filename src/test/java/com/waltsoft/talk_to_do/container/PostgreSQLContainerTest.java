@@ -1,4 +1,4 @@
-package com.waltsoft.talk_to_do.container_test;
+package com.waltsoft.talk_to_do.container;
 
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,16 +17,16 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("test")
 public abstract class PostgreSQLContainerTest {
 
-	@Container
-	@ServiceConnection
-	static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
+    @Container
+    @ServiceConnection
+    static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
 
-	@TestConfiguration
-	static class ApplicationEventPublisherConfiguration {
-		@Bean
-		@Primary
-		ApplicationEventPublisher publisher() {
-			return Mockito.mock(ApplicationEventPublisher.class);
-		}
-	}
+    @TestConfiguration
+    static class ApplicationEventPublisherConfiguration {
+        @Bean
+        @Primary
+        ApplicationEventPublisher publisher() {
+            return Mockito.mock(ApplicationEventPublisher.class);
+        }
+    }
 }

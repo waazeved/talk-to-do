@@ -6,28 +6,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class DotEnv {
 
-    private final Dotenv dotenv = Dotenv
+    private final Dotenv dotEnv = Dotenv
             .configure()
             .ignoreIfMissing()
             .load();
 
     public String getUsername() {
-        return dotenv.get("USERNAME", "");
+        return dotEnv.get("USERNAME", "");
     }
 
     public String getGeminiApiKey() {
-        return dotenv.get("GEMINI_API_KEY", "");
+        return dotEnv.get("GEMINI_API_KEY", "");
     }
 
     public String getDatabaseUrl() {
-        return dotenv.get("DATABASE_URL");
+        return dotEnv.get("DATABASE_URL");
     }
 
     public String getDatabaseUser() {
-        return dotenv.get("DATABASE_USER");
+        return dotEnv.get("DATABASE_USER");
     }
 
     public String getDatabasePassword() {
-        return dotenv.get("DATABASE_PASSWORD");
+        return dotEnv.get("DATABASE_PASSWORD");
     }
 }
