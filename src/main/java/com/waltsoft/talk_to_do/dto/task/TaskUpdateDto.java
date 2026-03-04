@@ -30,5 +30,5 @@ public record TaskUpdateDto(
 
         @JsonPropertyDescription("Scheduled end date time. Format: YYYY-MM-DDTHH:mm:SS. Optional.")
         String endDateTime
-) {
+) implements ITaskDto {
 }

@@ -33,7 +33,7 @@ public record TaskDto(
         String endDateTime
 
 
-) {
+) implements ITaskDto {
     public TaskDto(Task task) {
         this(task.getId(), task.getTitle(), task.getDescription(),
                 task
