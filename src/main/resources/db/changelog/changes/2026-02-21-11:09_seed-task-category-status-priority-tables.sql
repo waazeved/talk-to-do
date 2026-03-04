@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset walter.azvdo:seed-task-category-status-priority-tables context:seed splitStatements:true endDelimiter:;
+--changeset walter.azvdo:seed-task-category-status-priority-tables context:"seed,seedTest" splitStatements:true endDelimiter:;
 
 INSERT INTO task_status (code)
 VALUES ('PENDING'),

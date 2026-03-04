@@ -2,17 +2,16 @@ package com.waltsoft.talk_to_do.business.ai_agent;
 
 import com.waltsoft.talk_to_do.business.task.TaskService;
 import com.waltsoft.talk_to_do.business.task_category.TaskCategoryService;
-import com.waltsoft.talk_to_do.container.PostgreSQLContainerTest;
 import com.waltsoft.talk_to_do.dot_env.DotEnv;
 import com.waltsoft.talk_to_do.entity.task_priority.TaskPriority;
 import com.waltsoft.talk_to_do.entity.task_status.TaskStatus;
+import com.waltsoft.talk_to_do.test_container.PostgreSQLContainerTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -22,10 +21,6 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 
-@ImportAutoConfiguration(exclude = {
-        org.springframework.ai.model.google.genai.autoconfigure.chat.GoogleGenAiChatAutoConfiguration.class,
-        org.springframework.ai.model.chat.client.autoconfigure.ChatClientAutoConfiguration.class
-})
 class ChatTest extends PostgreSQLContainerTest {
 
     private static final String USERNAME = "xxx";
@@ -50,9 +45,6 @@ class ChatTest extends PostgreSQLContainerTest {
     @MockitoBean(name = "promptSystemContext")
     private Resource promptSystemContext;
 
-    private Consumer<ChatClient.PromptSystemSpec> system;
-    private Consumer<ChatClient.AdvisorSpec> advisors;
-
     @BeforeEach
     void setup() throws IOException {
         Mockito
@@ -65,7 +57,7 @@ class ChatTest extends PostgreSQLContainerTest {
     }
 
     @Test
-    @DisplayName("AIAgentService.chat should process input through spring context")
+    @DisplayName("Should process input through SpringAi ChatClient, using cache for repeated user inputs")
     void shouldProcessInputThroughSpringContextTest() {
         ChatClient.ChatClientRequestSpec requestSpec = Mockito.mock(ChatClient.ChatClientRequestSpec.class);
         ChatClient.CallResponseSpec responseSpec = Mockito.mock(ChatClient.CallResponseSpec.class);
@@ -99,10 +91,12 @@ class ChatTest extends PostgreSQLContainerTest {
                 .when(responseSpec.content())
                 .thenReturn(AI_OUTPUT);
 
-        String response = aiAgentService.chat(USER_INPUT);
+        String response1 = aiAgentService.chat(USER_INPUT);
+        String response2 = aiAgentService.chat(USER_INPUT);
 
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(AI_OUTPUT, response);
+        Assertions.assertNotNull(response1);
+        Assertions.assertEquals(AI_OUTPUT, response1);
+        Assertions.assertEquals(AI_OUTPUT, response2);
 
         Mockito
                 .verify(chatClient, org.mockito.Mockito.times(1))

@@ -32,7 +32,7 @@ public class ChatCommand implements Runnable {
         try (Terminal terminal = TerminalBuilder
                 .builder()
                 .system(true) //NOSONAR
-                .streams(System.in, System.out)
+                .streams(System.in, System.out) //NOSONAR
                 .nativeSignals(true)
                 .signalHandler(Terminal.SignalHandler.SIG_IGN)
                 .build()) {
