@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 @Transactional
-class FindAllDto extends PostgreSQLContainerTest {
+class FindAllDtoTest extends PostgreSQLContainerTest {
 
-    private final String CATEGORY_CODE = "WORK";
+    private static final String CATEGORY_CODE = "WORK";
 
     @MockitoSpyBean
     private TaskCategoryService taskCategoryService;

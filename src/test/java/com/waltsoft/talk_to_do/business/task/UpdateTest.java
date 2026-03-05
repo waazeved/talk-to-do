@@ -25,30 +25,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
-class Update extends PostgreSQLContainerTest {
+class UpdateTest extends PostgreSQLContainerTest {
 
-    private final String CATEGORY_CODE = "WORK";
-    private final TaskPriorityCodeEnum PRIORITY_CODE = TaskPriorityCodeEnum.HIGH;
-    private final TaskStatusCodeEnum STATUS_CODE = TaskStatusCodeEnum.IN_PROGRESS;
-    private final String TITLE = "Make New Project";
-    private final String DESCRIPTION = "Make project to detect fire in camera images";
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.now();
+    private static final String CATEGORY_CODE = "WORK";
+    private static final TaskPriorityCodeEnum PRIORITY_CODE = TaskPriorityCodeEnum.HIGH;
+    private static final TaskStatusCodeEnum STATUS_CODE = TaskStatusCodeEnum.IN_PROGRESS;
+    private static final String TITLE = "Make New Project";
+    private static final String DESCRIPTION = "Make project to detect fire in camera images";
+    private static final LocalDateTime START_DATE_TIME = LocalDateTime.now();
 
-    private final LocalDateTime END_DATE_TIME = LocalDateTime
+    private static final LocalDateTime END_DATE_TIME = LocalDateTime
             .now()
             .plusHours(1);
 
-    private final String CATEGORY_CODE_UPDATE = "FITNESS";
-    private final TaskPriorityCodeEnum PRIORITY_CODE_UPDATE = TaskPriorityCodeEnum.LOW;
-    private final TaskStatusCodeEnum STATUS_CODE_UPDATE = TaskStatusCodeEnum.PENDING;
-    private final String TITLE_UPDATE = "Morning Run";
-    private final String DESCRIPTION_UPDATE = "Run 28 km";
+    private static final String CATEGORY_CODE_UPDATE = "FITNESS";
+    private static final TaskPriorityCodeEnum PRIORITY_CODE_UPDATE = TaskPriorityCodeEnum.LOW;
+    private static final TaskStatusCodeEnum STATUS_CODE_UPDATE = TaskStatusCodeEnum.PENDING;
+    private static final String TITLE_UPDATE = "Morning Run";
+    private static final String DESCRIPTION_UPDATE = "Run 28 km";
 
-    private final LocalDateTime START_DATE_TIME_UPDATE = LocalDateTime
+    private static final LocalDateTime START_DATE_TIME_UPDATE = LocalDateTime
             .now()
             .plusHours(2);
 
-    private final LocalDateTime END_DATE_TIME_UPDATE = LocalDateTime
+    private static final LocalDateTime END_DATE_TIME_UPDATE = LocalDateTime
             .now()
             .plusHours(3);
 

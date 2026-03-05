@@ -13,7 +13,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.util.Map;
 
 
-class FindAllMappedByCode extends PostgreSQLContainerTest {
+class FindAllMappedByCodeTest extends PostgreSQLContainerTest {
 
     @Autowired
     private TaskStatusService taskStatusService;

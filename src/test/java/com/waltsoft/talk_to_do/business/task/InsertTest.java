@@ -25,16 +25,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
-class Insert extends PostgreSQLContainerTest {
+class InsertTest extends PostgreSQLContainerTest {
 
-    private final String CATEGORY_CODE = "WORK";
-    private final TaskPriorityCodeEnum PRIORITY_CODE = TaskPriorityCodeEnum.HIGH;
-    private final TaskStatusCodeEnum STATUS_CODE = TaskStatusCodeEnum.IN_PROGRESS;
-    private final String TITLE = "Make New Project";
-    private final String DESCRIPTION = "Make project to detect fire in camera images";
-    private final LocalDateTime START_DATE_TIME = LocalDateTime.now();
+    private static final String CATEGORY_CODE = "WORK";
+    private static final TaskPriorityCodeEnum PRIORITY_CODE = TaskPriorityCodeEnum.HIGH;
+    private static final TaskStatusCodeEnum STATUS_CODE = TaskStatusCodeEnum.IN_PROGRESS;
+    private static final String TITLE = "Make New Project";
+    private static final String DESCRIPTION = "Make project to detect fire in camera images";
+    private static final LocalDateTime START_DATE_TIME = LocalDateTime.now();
 
-    private final LocalDateTime END_DATE_TIME = LocalDateTime
+    private static final LocalDateTime END_DATE_TIME = LocalDateTime
             .now()
             .plusHours(1);
 
