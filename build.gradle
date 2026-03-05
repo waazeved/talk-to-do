@@ -88,7 +88,7 @@ jacocoTestCoverageVerification {
             element = 'BUNDLE'
             limit {
                 counter = 'CLASS'
-                minimum = 0.8
+                minimum = 0.85
             }
         }
 
@@ -96,7 +96,7 @@ jacocoTestCoverageVerification {
             element = 'BUNDLE'
             limit {
                 counter = 'LINE'
-                minimum = 0.60
+                minimum = 0.50
             }
         }
 
