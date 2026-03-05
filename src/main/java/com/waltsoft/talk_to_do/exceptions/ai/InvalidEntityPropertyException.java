@@ -1,4 +1,4 @@
-package com.waltsoft.talk_to_do.Exceptions.ai;
+package com.waltsoft.talk_to_do.exceptions.ai;
 
 public class InvalidEntityPropertyException extends RuntimeException {
 
