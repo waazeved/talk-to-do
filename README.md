@@ -23,7 +23,7 @@ is seamless.
 
 * **Java 21**
 * **Spring Boot 3.4.0**
-* **Spring AI** (Integration with Google Gemini 1.5 Flash)
+* **Spring AI** (Integration with Google Gemini 2.5 Flash)
 * **Spring Data JPA** & **PostgreSQL**
 * **Liquibase** (Database versioning)
 * **Picocli** & **JLine** (Interactive CLI interface)
@@ -59,7 +59,8 @@ To run the application, you can use the Gradle wrapper:
 ```
 
 > 💡 **Pro Tip for the Best Experience:** Because this project uses **JLine** for its interactive terminal, running the
-> application directly from your IDE (like **IntelliJ IDEA**) or executing the **generated JAR file** in a native terminal
+> application directly from your IDE (like **IntelliJ IDEA**) or executing the **generated JAR file** in a native
+> terminal
 > provides a much smoother and richer CLI experience. Running through `./gradlew bootRun` may interfere with JLine's
 > advanced features.
 

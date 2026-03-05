@@ -15,7 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import java.util.stream.Stream;
 
 
-class FindByCode extends PostgreSQLContainerTest {
+class FindByCodeTest extends PostgreSQLContainerTest {
 
     @MockitoSpyBean
     private TaskPriorityService taskPriorityService;
